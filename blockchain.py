@@ -37,3 +37,7 @@ class Blockchain:
         self.chain.append(block)
         # Return block to display the 4 keys of this block in Postman
         return block
+
+    # Method to get the last block of the current chain
+    def get_previous_block(self):
+        return self.chain[-1]
