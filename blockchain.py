@@ -141,3 +141,8 @@ def get_chain():
     response = {'chain': blockchain.chain,
                 'length': len(blockchain.chain)}
     return jsonify(response), 200
+
+# Running the app
+# Call run method from app object with 2 arguments: host and Port
+# host '0.0.0.0' to make the server publicly available
+app.run(host = '0.0.0.0', port = 5000)
