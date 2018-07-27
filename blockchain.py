@@ -64,3 +64,39 @@ class Blockchain:
                 new_proof += 1
         # return new_proof if miner win
         return new_proof
+
+    # We need to check if everything is right in our blockchain to make sure we have a valid Blockchain
+    ## First we make a hash method that will return the SHA256 cryptographic hash of an input(block)
+    def hash(self, block):
+        # We use json library to make object a string with dumps method
+        # It takes 2 arguments, block and sort_keys = True so the block is sorted by the keys
+        encoded_block = json.dumps(block, sort_keys = True).encode()
+        # We return the cryptographic hash of our block
+        return hashlib.sha256(encoded_block).hexdigest()
+
+    ## Check 1 - Check previous_hash of each block is equal to the hash of the previous block
+    ## Check 2 - Check if each block in the blockchain has a correct proof_of_work - return cryptographic hash starting with '0000'
+    def is_chain_valid(self, chain):
+        # Initialize variables of the loop
+        previous_block = chain[0] # First block of the chain
+        block_index = 1 # Each block has the index key in the dict. First block starts at index = 1
+        # While loop to iterate over all the block in the chain
+        while block_index < len(chain):
+            # Check 1: previous hash valid
+            block = chain[block_index]
+            # if 'previous_hash' key in current block is different than hash of previous block return false as chain non-valid
+            if block['previous_hash'] != self.hash(previous_block):
+                return False
+            # Check 2: proof of work valid
+            previous_proof = previous_block['proof'] # Take previous proof
+            proof = block['proof'] # Take current proof
+            # Compute hash_operation
+            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
+            # Check hash-operation starts with '0000' or return false
+            if hash_operation[:4] != '0000':
+                return False
+            # Update variables of the loop for next while loop iteration
+            previous_block = block
+            block_index += 1
+        # Returns True if everything is right in our blockchain or no False returned
+        return True
