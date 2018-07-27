@@ -9,6 +9,7 @@ import json
 # Web application with Flask and return messages in Postman with jsonify
 from flask import Flask, jsonify
 
+
 # Part 1 - Building a Blockchain
 
 class Blockchain:
@@ -100,3 +101,13 @@ class Blockchain:
             block_index += 1
         # Returns True if everything is right in our blockchain or no False returned
         return True
+
+
+# Part 2 - Mining our Blockchain
+
+# Creating a Web App
+# Create app object from Flask class imported at the top
+app = Flask(__name__)
+
+# Creating a Blockchain
+blockchain = Blockchain()
