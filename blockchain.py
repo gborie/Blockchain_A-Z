@@ -112,9 +112,9 @@ app = Flask(__name__)
 # Creating a Blockchain
 blockchain = Blockchain()
 
-# Mining a new block with get request
-# Get method to get something like a block and post method to create something like transactions
+# Mining a new block via GET request
 @app.route('/mine_block', methods = ['GET'])
+# Get method to get something like a block and post method to create something like transactions
 # mine_block function doesn't take arguments
 def mine_block():
     # Get the previous proof from previous block for proof_of_work method
@@ -133,4 +133,11 @@ def mine_block():
                 'proof': block['proof'],
                 'previous_hash': block['previous_hash']}
     # Return response using jsonify function and http status code 200
+    return jsonify(response), 200
+
+# Getting the full Blockchain and length via GET request
+@app.route('/get_chain', methods = ['GET'])
+def get_chain():
+    response = {'chain': blockchain.chain,
+                'length': len(blockchain.chain)}
     return jsonify(response), 200
