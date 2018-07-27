@@ -41,3 +41,26 @@ class Blockchain:
     # Method to get the last block of the current chain
     def get_previous_block(self):
         return self.chain[-1]
+
+    # proof_of_work is the number that miners have to find to mine a new block
+    # Problem challanging to solve so it does not lose value (cryptoccy) but easy to verify
+    def proof_of_work(self, previous_proof):
+        # new_proof initialized to 1
+        new_proof = 1
+        # check_proof inialized to false
+        check_proof = False
+        # while loop as long as check_proof is False
+        while check_proof is False:
+            # hash_operation non symetrical operation with new_proof**2 - previous_proof**2
+            # encode method to encode string in right format expected by SHA-256
+            # hexdigest to get hexadecimal characters
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            # The more leading zeros the harder to mine the block. Bitcoin is using 18 zeros
+            if hash_operation[:4] == '0000':
+                # Miner win and check_proof updated to True
+                check_proof = True
+            else:
+                # Miner don't win and try again with new_proof incremented by 1
+                new_proof += 1
+        # return new_proof if miner win
+        return new_proof
