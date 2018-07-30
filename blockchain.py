@@ -13,7 +13,6 @@ from flask import Flask, jsonify
 # Part 1 - Building a Blockchain
 
 class Blockchain:
-
     # Always start with the init method that will take self as an argument
     # Self refers to the object that we will create once the class is made
     # Once we create a class we can make as many objects as we want
