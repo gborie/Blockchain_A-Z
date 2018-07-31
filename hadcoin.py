@@ -1,3 +1,4 @@
+# https://www.superdatascience.com/blockchain/
 # Module 2 - Create a Cryptocurrency
 
 import datetime
@@ -157,7 +158,7 @@ def is_valid():
 # Adding a new transaction to the Blockchain with POST request
 @app.route('/add_transaction', methods = ['POST'])
 def add_transaction():
-    # get the json file posted in Postman
+    # json represents the json file itself that we get in Postman
     json = request.get_json()
     # list of 3 keys in a transaction
     transaction_keys = ['sender', 'receiver', 'amount']
@@ -169,3 +170,43 @@ def add_transaction():
     # Return confirmation message
     response = {'message': f'This transaction will be added to Block {index}'}
     return jsonify(response), 201
+
+# Part 3 - Decentralizing our Blockchain
+# Connecting new nodes
+@app.route('/connect_node', methods = ['POST'])
+def connect_node():
+    # json represents the json file itself that we get in Postman
+    json = request.get_json()
+    # Get addresses in json
+    nodes = json.get('nodes')
+    # Make sure nodes is not an empty list
+    if nodes is None:
+        return "No node", 400
+    # Loop over each node and use add_note method
+    for node in nodes:
+        blockchain.add_node(node)
+    # Return response with message and list of all our nodes
+    response = {'message': 'All the nodes are now connected. The Hadcoin Blockchain now contains the following nodes:',
+                'total_nodes': list(blockchain.nodes)}
+    # Return response in json format
+    return jsonify(response), 201
+
+# Replacing the chain by the longest chain if needed
+@app.route('/replace_chain', methods = ['GET'])
+def replace_chain():
+    # Boolean but method also replaces the chain if needed
+    is_chain_replaced = blockchain.replace_chain()
+    # Response if True
+    if is_chain_replaced:
+        response = {'message': 'The nodes had different chains so the chain was replaced by the longest one.',
+                    'new_chain': blockchain.chain}
+    # Response if False
+    else:
+        response = {'message': 'All good. The chain is the largest one.',
+                    'actual_chain': blockchain.chain}
+    # Return json file
+    return jsonify(response), 200
+
+
+# Running the app
+app.run(host = '0.0.0.0', port = 5000)
