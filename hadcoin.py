@@ -1,13 +1,9 @@
 # Module 2 - Create a Cryptocurrency
 
-# Each block will have its own timestamp
 import datetime
-# Hash the blocks
 import hashlib
-# Encode blocks before hashing them
 import json
-# Web application with Flask, return messages in Postman with jsonify
-# And request module to connect the nodes in our decentralized network
+# request module to connect the nodes in our decentralized network
 from flask import Flask, jsonify, request
 # Needed when checking chains of nodes
 import requests
@@ -35,7 +31,7 @@ class Blockchain:
                  'previous_hash': previous_hash,
                  # transactions key added to block
                  'transactions': self.transactions}
-        # self.transactions added to method
+        # empty transactions list after added them to block
         self.transactions = []
         self.chain.append(block)
         return block
@@ -98,12 +94,15 @@ class Blockchain:
         # Iterate over the nodes in the network to find longest chain
         for node in network:
             response = requests.get(f'http://{node}/get_chain')
+            # Get chain and length of each node
             if response.status_code == 200:
                 length = response.json()['length']
                 chain = response.json()['chain']
+                # If we find a new longer chain we update the variables
                 if length > max_length and self.is_chain_valid(chain):
                     max_length = length
                     longest_chain = chain
+        # If we found a new longer chain we also update self.chain to be the new longest chain
         if longest_chain:
             self.chain = longest_chain
             return True
